@@ -15,6 +15,7 @@
 #include "data.h"
 #include "SSBle.h"
 #include "tasks.h"
+#include "veml6075.h"
 
 #if PRINT_ON_RTT
     #include "SEGGER_RTT.h"
@@ -68,7 +69,9 @@ int main(){
     blue = 1;
 
     I2C test (I2C_DATA, I2C_CLK);
-    aconno_i2c uvSensor(&test, adresa);
+    aconno_i2c uvSensorI2C(&test, adresa);
+    veml6075 uvSensor(&uvSensorI2C);
+
     int16_t UVA = 0;
     int i;
     wait_ms(500);
@@ -104,17 +107,18 @@ int main(){
         //uvSensor.readFromReg(IDReg, buffer, 2);
         //test.write(adresa & 0xFE, data, 2);
         //retValue = test.read(adresa | 0x01, buffer, 2);
-        //uvSensor.sendCommand(&IDReg, 1, buffer, 2, true);
+        uvSensorI2C.sendCommand(&IDReg, 1, buffer, 2, true);
         //uvSensor.sendCommand(data, 1, buffer, 2, true);
-        /*
-        retValue = uvSensor.sendCommand(&IDReg, 1, buffer, 2, true);
-        //uvSensor.sendCommand(IDReg, 1, buffer, 2, true);
-        printf("Dobio: %d\n", retValue);
+        //uvSensor.readID(buffer);
+
         printf("Procitao: LSB: 0x%x, MSB: 0x%x\n",
                         buffer[0], buffer[1]);
-        //UVA = 0;
-        //UVA = ((uint16_t)(buffer[0]) << 8) | buffer[1];
-        //printf("UVA = %d\n", UVA);
+        /*
+        UVA = 0;
+        UVA = ((uint16_t)(buffer[0]) << 8) | buffer[1];
+        printf("UVA = %d\n", UVA);
+        */
+        led = !led;
         wait_ms(250);
         */
         updateGAPData(&ble);
