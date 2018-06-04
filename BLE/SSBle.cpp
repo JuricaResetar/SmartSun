@@ -18,12 +18,46 @@
 #endif
 
 extern advertisingFormat g_advertisingData;
+GapAdvertisingData advData = GapAdvertisingData();
+
+union{
+    float f;
+    unsigned char byte[4];
+}UVAIndex;
+
+union{
+    float f;
+    unsigned char byte[4];
+}UVBIndex;
 
 void onBleInitError(BLE &ble, ble_error_t error){
     /* Avoid compiler warnings */
     (void) ble;
     (void) error;
     printf("Ble init error.\n");
+}
+
+void updateGAPData(BLE *ble)
+{
+    UVAIndex.f += 0.1;
+    UVBIndex.f += 0.2;
+    int i;
+
+    for(i=0; i<4; i++)
+    {
+        *(g_advertisingData.UVAFactor + i) = *((char*)&UVAIndex + 4 - i - 1);
+    }
+
+    for(i=0; i<4; i++)
+    {
+        *(g_advertisingData.UVBFactor + i) = *((char*)&UVBIndex + 4 - i -1);
+    }
+
+    advData = ble->getAdvertisingData();
+    advData.updateData(advData.MANUFACTURER_SPECIFIC_DATA,
+        (uint8_t *)&g_advertisingData, sizeof(advertisingFormat));
+    ble->setAdvertisingData(advData);
+
 }
 
 void bleInitComplete(BLE::InitializationCompleteCallbackContext *params){
