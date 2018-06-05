@@ -19,6 +19,12 @@ class veml6075
     public:
         veml6075(aconno_i2c *i2c) : aconnoI2C(i2c){}
         uint8_t readID(char *buffer);
+        uint8_t shutDown();
+        uint8_t enable();
+        uint8_t getUVA(char *buffer);
+        uint8_t getUVB(char *buffer);
+        uint8_t getComp1(char *buffer);
+        uint8_t getComp2(char *buffer);
     private:
         aconno_i2c *aconnoI2C;
 

@@ -100,28 +100,30 @@ int main(){
     bleT.start(callback(bleC, &ble));
     //updateAdvT.start(callback(updateDataC, &ble));
 
+    uvSensor.enable();
+    wait_ms(100);
 
+    uvSensor.readID(buffer);
+    printf("Procitao: LSB: 0x%x, MSB: 0x%x\n",
+                    buffer[0], buffer[1]);
 
     while(1){
+        uvSensor.getUVA(buffer);
+        printf("UVA: 0x%x, 0x%x\t\t",
+                        buffer[1], buffer[0]);
+        uvSensor.getUVB(buffer);
+        printf("UVB: 0x%x, 0x%x\t\t",
+                        buffer[1], buffer[0]);
 
-        //uvSensor.readFromReg(IDReg, buffer, 2);
-        //test.write(adresa & 0xFE, data, 2);
-        //retValue = test.read(adresa | 0x01, buffer, 2);
-        uvSensorI2C.sendCommand(&IDReg, 1, buffer, 2, true);
-        //uvSensor.sendCommand(data, 1, buffer, 2, true);
-        //uvSensor.readID(buffer);
-
-        printf("Procitao: LSB: 0x%x, MSB: 0x%x\n",
-                        buffer[0], buffer[1]);
-        /*
-        UVA = 0;
-        UVA = ((uint16_t)(buffer[0]) << 8) | buffer[1];
-        printf("UVA = %d\n", UVA);
-        */
-        led = !led;
+        uvSensor.getComp1(buffer);
+        printf("UVA: 0x%x, 0x%x\t\t",
+                        buffer[1], buffer[0]);
+        uvSensor.getComp2(buffer);
+        printf("UVB: 0x%x, 0x%x\n",
+                        buffer[1], buffer[0]);
         wait_ms(250);
-        */
-        updateGAPData(&ble);
-        wait_ms(1000);
+
+        //updateGAPData(&ble);
+        //wait_ms(1000);
     }
 }
