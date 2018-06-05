@@ -72,7 +72,7 @@ int main(){
     aconno_i2c uvSensorI2C(&test, adresa);
     veml6075 uvSensor(&uvSensorI2C);
 
-    int16_t UVA = 0;
+
     int i;
     wait_ms(500);
 
@@ -103,27 +103,48 @@ int main(){
     uvSensor.enable();
     wait_ms(100);
 
-    uvSensor.readID(buffer);
-    printf("Procitao: LSB: 0x%x, MSB: 0x%x\n",
-                    buffer[0], buffer[1]);
+    char floatek[25] = "Bok bok";
+
+    float fUVA;
+    float fUVB;
+    float fVisibleFactor;
+    float fIRFactor;
 
     while(1){
-        uvSensor.getUVA(buffer);
-        printf("UVA: 0x%x, 0x%x\t\t",
-                        buffer[1], buffer[0]);
-        uvSensor.getUVB(buffer);
-        printf("UVB: 0x%x, 0x%x\t\t",
-                        buffer[1], buffer[0]);
 
-        uvSensor.getComp1(buffer);
-        printf("UVA: 0x%x, 0x%x\t\t",
-                        buffer[1], buffer[0]);
-        uvSensor.getComp2(buffer);
-        printf("UVB: 0x%x, 0x%x\n",
-                        buffer[1], buffer[0]);
+
+
+        fVisibleFactor = uvSensor.getComp1();
+        fIRFactor = uvSensor.getComp2();
+
+        sprintf(floatek, "\nfVisibleFactor: %2.5f\n", fVisibleFactor);
+        printf("%s", floatek);
+
+        sprintf(floatek, "fIRFactor: %2.5f\n", fIRFactor);
+        printf("%s", floatek);
+
+        fUVA = uvSensor.getUVA();
+        fUVA = (fUVA) - aFactor*(fVisibleFactor)
+                - bFactor*(fIRFactor);
+        //fUVA *= UVADark;
+
+        sprintf(floatek, "UVA: %2.5f\n", fUVA);
+        printf("%s", floatek);
+
+        fUVB = uvSensor.getUVB();
+        fUVB = (fUVB) - cFactor*(fVisibleFactor)
+                - dFactor*(fIRFactor);
+        //fUVB *= UVBDark;
+
+        sprintf(floatek, "UVB: %2.5f\n", fUVB);
+        printf("%s", floatek);
+
+        float UVIndex = ( fUVA + fUVB ) / 2.0;
+
+        sprintf(floatek, "UVIndex: %2.5f\n", UVIndex);
+        printf("%s\n", floatek);
+
         wait_ms(250);
 
-        //updateGAPData(&ble);
-        //wait_ms(1000);
     }
 }
