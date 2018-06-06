@@ -44,6 +44,10 @@ union{
 
 char adresa = 0x20;
 
+DigitalIn reset(p18);
+DigitalOut done(p20);
+DigitalIn wake(p19);
+
 int main(){
     char buffer[4] = {1, 1, 1, 1};
     char data[3] = {0x0C, 0x00, 0x00};
@@ -67,39 +71,28 @@ int main(){
     wait_ms(250);
     blue = 1;
 
-    I2C test (I2C_DATA, I2C_CLK);
-    aconno_i2c uvSensor(&test, adresa);
-    int16_t UVA = 0;
-    int i;
-    wait_ms(500);
+    Timer t;
+    t.start();
 
-    UVAIndex.f = 1.0;
-    UVBIndex.f = 4.0;
+    done = 1;
+    wait_ms(1);
+    done = 0;
 
-    g_advertisingData.header = 0x0059;
-    for(i=0; i<4; i++)
-    {
-        *(g_advertisingData.UVAFactor + i) = *((char*)&UVAIndex + 4 - i - 1);
-    }
-
-    for(i=0; i<4; i++)
-    {
-        *(g_advertisingData.UVBFactor + i) = *((char*)&UVBIndex + 4 - i -1);
-    }
-    //g_advertisingData.UVAFactor = 0xAA;
-    //g_advertisingData.UVBFactor = 0xBB;
-    //memcpy(g_advertisingData.UVBFactor, (char*)&UVBIndex, 4);
-
-    BLE &ble = BLE::Instance();
-    ble.init(bleInitComplete);
-    ble.gap().setTxPower(TX_POWER_dB);        // Set TX power to TX_POWER
-    while (ble.hasInitialized()  == false) { }
-    bleT.start(callback(bleC, &ble));
-    //updateAdvT.start(callback(updateDataC, &ble));
-
-
+    printf("Pocinje.\n");
 
     while(1){
+
+        if(wake)
+        {
+            t.stop();
+            printf("Done signal is set.\n");
+            printf("The time taken was %d seconds\n", t.read_ms()/1000);
+            done = 1;
+            wait_ms(1);
+            done = 0;
+            t.reset();
+            t.start();
+        }
 
         //uvSensor.readFromReg(IDReg, buffer, 2);
         //test.write(adresa & 0xFE, data, 2);
@@ -117,7 +110,5 @@ int main(){
         //printf("UVA = %d\n", UVA);
         wait_ms(250);
         */
-        updateGAPData(&ble);
-        wait_ms(1000);
     }
 }
