@@ -17,7 +17,8 @@ typedef struct __attribute__((packed, aligned(1))) advertisingFormat_t
 {
     __attribute__((packed, aligned(1))) uint16_t header; // 0- 1
     __attribute__((packed, aligned(1))) uint8_t UVAFactor[4];   // 2 - 5
-    __attribute__((packed, aligned(1))) uint8_t UVBFactor[4];   // 6 - 9
+    //__attribute__((packed, aligned(1))) uint8_t UVBFactor[4];   // 6 - 9
+    uint8_t flag;
 }advertisingFormat;
 
 #endif //__DATA_H__

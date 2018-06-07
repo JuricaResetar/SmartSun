@@ -82,10 +82,13 @@ int main(){
         *(g_advertisingData.UVAFactor + i) = *((char*)&UVAIndex + 4 - i - 1);
     }
 
+    /*
     for(i=0; i<4; i++)
     {
         *(g_advertisingData.UVBFactor + i) = *((char*)&UVBIndex + 4 - i -1);
     }
+    */
+    g_advertisingData.flag = 0;
     //g_advertisingData.UVAFactor = 0xAA;
     //g_advertisingData.UVBFactor = 0xBB;
     //memcpy(g_advertisingData.UVBFactor, (char*)&UVBIndex, 4);

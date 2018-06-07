@@ -39,8 +39,9 @@ void onBleInitError(BLE &ble, ble_error_t error){
 
 void updateGAPData(BLE *ble)
 {
+    static uint8_t flag = 0;
     UVAIndex.f += 0.1;
-    UVBIndex.f += 0.2;
+    //UVBIndex.f += 0.2;
     int i;
 
     for(i=0; i<4; i++)
@@ -48,10 +49,14 @@ void updateGAPData(BLE *ble)
         *(g_advertisingData.UVAFactor + i) = *((char*)&UVAIndex + 4 - i - 1);
     }
 
+    /*
     for(i=0; i<4; i++)
     {
         *(g_advertisingData.UVBFactor + i) = *((char*)&UVBIndex + 4 - i -1);
     }
+    */
+    flag = !flag;
+    g_advertisingData.flag = flag;
 
     advData = ble->getAdvertisingData();
     advData.updateData(advData.MANUFACTURER_SPECIFIC_DATA,
