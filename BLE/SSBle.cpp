@@ -40,7 +40,15 @@ void onBleInitError(BLE &ble, ble_error_t error){
 void updateGAPData(BLE *ble)
 {
     static uint8_t flag = 0;
-    UVAIndex.f += 0.1;
+    static uint8_t nekaj = 0;
+
+    if(!nekaj)
+        UVAIndex.f += 0.1;
+    else
+        UVAIndex.f -= 0.1;
+
+    if(UVAIndex.f > 8)
+        nekaj = 1;
     //UVBIndex.f += 0.2;
     int i;
 
