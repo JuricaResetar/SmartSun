@@ -37,7 +37,7 @@ void onBleInitError(BLE &ble, ble_error_t error){
     printf("Ble init error.\n");
 }
 
-void updateGAPData(BLE *ble)
+void updateGAPData(BLE *ble, float newData)
 {
     static uint8_t flag = 0;
     static uint8_t nekaj = 0;
@@ -54,7 +54,7 @@ void updateGAPData(BLE *ble)
 
     for(i=0; i<4; i++)
     {
-        *(g_advertisingData.UVAFactor + i) = *((char*)&UVAIndex + 4 - i - 1);
+        *(g_advertisingData.UVAFactor + i) = *((char*)&newData + 4 - i - 1);
     }
 
     /*

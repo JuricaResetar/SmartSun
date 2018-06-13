@@ -24,6 +24,6 @@ void onBleInitError(BLE &ble, ble_error_t error);
  */
 void bleInitComplete(BLE::InitializationCompleteCallbackContext *params);
 
-void updateGAPData(BLE *ble);
+void updateGAPData(BLE *ble, float data);
 
 #endif // __SSBLE_H__

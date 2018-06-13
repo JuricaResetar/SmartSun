@@ -145,7 +145,7 @@ int main(){
         printf("%s\n", floatek);
 
 
-        updateGAPData(&ble);
+        updateGAPData(&ble, UVIndex);
         wait_ms(1000);
     }
 }
