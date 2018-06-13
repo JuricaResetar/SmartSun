@@ -43,10 +43,18 @@ union{
 }UVBIndex;
 
 char adresa = 0x20;
+uint8_t flag = 0;
 
 DigitalIn reset(p18);
 DigitalOut done(p20);
-DigitalIn wake(p19);
+//DigitalIn wake(p19);
+InterruptIn wakeUp(p19);
+
+void wakeUpHandler()
+{
+	printf("Probudio sam se.\n");
+	flag = 1;
+}
 
 int main(){
     char buffer[4] = {1, 1, 1, 1};
@@ -78,12 +86,15 @@ int main(){
     wait_ms(1);
     done = 0;
 
+	wakeUp.rise(&wakeUpHandler);
+
     printf("Pocinje.\n");
 
     while(1){
 
-        if(wake)
+        if(flag)
         {
+			flag = 0;
             t.stop();
             printf("Done signal is set.\n");
             printf("The time taken was %d seconds\n", t.read_ms()/1000);
@@ -93,22 +104,5 @@ int main(){
             t.reset();
             t.start();
         }
-
-        //uvSensor.readFromReg(IDReg, buffer, 2);
-        //test.write(adresa & 0xFE, data, 2);
-        //retValue = test.read(adresa | 0x01, buffer, 2);
-        //uvSensor.sendCommand(&IDReg, 1, buffer, 2, true);
-        //uvSensor.sendCommand(data, 1, buffer, 2, true);
-        /*
-        retValue = uvSensor.sendCommand(&IDReg, 1, buffer, 2, true);
-        //uvSensor.sendCommand(IDReg, 1, buffer, 2, true);
-        printf("Dobio: %d\n", retValue);
-        printf("Procitao: LSB: 0x%x, MSB: 0x%x\n",
-                        buffer[0], buffer[1]);
-        //UVA = 0;
-        //UVA = ((uint16_t)(buffer[0]) << 8) | buffer[1];
-        //printf("UVA = %d\n", UVA);
-        wait_ms(250);
-        */
     }
 }
