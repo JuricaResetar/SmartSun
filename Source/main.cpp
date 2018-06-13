@@ -74,7 +74,6 @@ int main(){
     wait_ms(500);
 
     UVAIndex.f = 6.0;
-    UVBIndex.f = 4.0;
 
     g_advertisingData.header = 0x0059;
     for(i=0; i<4; i++)
@@ -82,17 +81,12 @@ int main(){
         *(g_advertisingData.UVAFactor + i) = *((char*)&UVAIndex + 4 - i - 1);
     }
 
-
     for(i=0; i<8; i++)
     {
         *(g_advertisingData.UUID + i) = *((char*)UUID + 4 - i -1);
     }
 
-
     g_advertisingData.flag = 0;
-    //g_advertisingData.UVAFactor = 0xAA;
-    //g_advertisingData.UVBFactor = 0xBB;
-    //memcpy(g_advertisingData.UVBFactor, (char*)&UVBIndex, 4);
 
     BLE &ble = BLE::Instance();
     ble.init(bleInitComplete);
@@ -101,26 +95,8 @@ int main(){
     bleT.start(callback(bleC, &ble));
     //updateAdvT.start(callback(updateDataC, &ble));
 
-
-
-    while(1){
-
-        //uvSensor.readFromReg(IDReg, buffer, 2);
-        //test.write(adresa & 0xFE, data, 2);
-        //retValue = test.read(adresa | 0x01, buffer, 2);
-        //uvSensor.sendCommand(&IDReg, 1, buffer, 2, true);
-        //uvSensor.sendCommand(data, 1, buffer, 2, true);
-        /*
-        retValue = uvSensor.sendCommand(&IDReg, 1, buffer, 2, true);
-        //uvSensor.sendCommand(IDReg, 1, buffer, 2, true);
-        printf("Dobio: %d\n", retValue);
-        printf("Procitao: LSB: 0x%x, MSB: 0x%x\n",
-                        buffer[0], buffer[1]);
-        //UVA = 0;
-        //UVA = ((uint16_t)(buffer[0]) << 8) | buffer[1];
-        //printf("UVA = %d\n", UVA);
-        wait_ms(250);
-        */
+    while(1)
+	{
         updateGAPData(&ble);
         wait_ms(1000);
     }
