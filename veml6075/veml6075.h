@@ -14,12 +14,12 @@
 #include "mbed.h"
 #include "aconno_i2c.h"
 
-#define aFactor         ((float)2.22)
-#define bFactor         ((float)1.33)
-#define cFactor         ((float)2.95)
-#define dFactor         ((float)1.74)
-#define UVADark         ((float)0.001461)
-#define UVBDark         ((float)0.002591)
+#define aFactor         ((float)3.33)
+#define bFactor         ((float)2.5)
+#define cFactor         ((float)3.66)
+#define dFactor         ((float)2.75)
+#define UVADark         ((float)0.0011)
+#define UVBDark         ((float)0.00125)
 
 class veml6075
 {
@@ -30,6 +30,7 @@ class veml6075
         uint8_t enable();
         float getUVA();
         float getUVB();
+		float getDummyData();
         float getComp1();
         float getComp2();
     private:

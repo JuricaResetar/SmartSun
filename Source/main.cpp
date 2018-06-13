@@ -109,13 +109,16 @@ int main(){
     float fUVB;
     float fVisibleFactor;
     float fIRFactor;
+	float fDummy;
 
     while(1){
 
-
-
         fVisibleFactor = uvSensor.getComp1();
         fIRFactor = uvSensor.getComp2();
+		fDummy = uvSensor.getDummyData();
+
+		sprintf(floatek, "\nfDummyData: %2.5f\n", fDummy);
+		printf("%s", floatek);
 
         sprintf(floatek, "\nfVisibleFactor: %2.5f\n", fVisibleFactor);
         printf("%s", floatek);
@@ -124,22 +127,21 @@ int main(){
         printf("%s", floatek);
 
         fUVA = uvSensor.getUVA();
-        fUVA = (fUVA) - aFactor*(fVisibleFactor)
-                - bFactor*(fIRFactor);
+        fUVA = (fUVA - fDummy) - aFactor*(fVisibleFactor - fDummy)
+                - bFactor*(fIRFactor - fDummy);
         //fUVA *= UVADark;
 
         sprintf(floatek, "UVA: %2.5f\n", fUVA);
         printf("%s", floatek);
 
         fUVB = uvSensor.getUVB();
-        fUVB = (fUVB) - cFactor*(fVisibleFactor)
-                - dFactor*(fIRFactor);
-        //fUVB *= UVBDark;
+        fUVB = (fUVB - fDummy) - cFactor*(fVisibleFactor - fDummy)
+                - dFactor*(fIRFactor - fDummy);
 
         sprintf(floatek, "UVB: %2.5f\n", fUVB);
         printf("%s", floatek);
 
-        float UVIndex = ( fUVA + fUVB ) / 2.0;
+        float UVIndex = ( fUVA + fUVB ) / 16.0;
 
         sprintf(floatek, "UVIndex: %2.5f\n", UVIndex);
         printf("%s\n", floatek);

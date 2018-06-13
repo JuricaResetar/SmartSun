@@ -93,6 +93,29 @@ uint8_t veml6075::getRawComp2(char *buffer)
     return success;
 }
 
+float veml6075::getDummyData()
+{
+	char reg = VEML6075_CONF_HD;
+	char success;
+	char buffer[2];
+	uint16_t dummy;
+	float fDummy;
+
+	success = aconnoI2C->sendCommand(&reg, 1, buffer, 2, true);
+
+	if(success != SUCCESS)
+	{
+		fDummy = -1;
+	}
+	else
+	{
+		dummy = *(uint16_t*)buffer;
+		fDummy = (float)dummy;
+	}
+
+	return dummy;
+}
+
 float veml6075::getUVA()
 {
     uint16_t UVA;
@@ -109,7 +132,7 @@ float veml6075::getUVA()
     else
     {
         UVA = *(uint16_t*)buffer;
-        printf("Raw UVA: %d\n", UVA);
+        //printf("Raw UVA: %d\n", UVA);
         fUVA = (float)UVA;
     }
 
@@ -132,7 +155,7 @@ float veml6075::getUVB()
     else
     {
         UVB = *(uint16_t*)buffer;
-        printf("Raw UVB: %d\n", UVB);
+        //printf("Raw UVB: %d\n", UVB);
         fUVB = (float)UVB;
     }
 
